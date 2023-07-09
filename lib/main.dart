@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'sendDataExample.dart';
 
 void main() => runApp(MyApp());
 
@@ -47,6 +48,7 @@ class NativeApp extends StatefulWidget {
 class _NativeApp extends State<NativeApp> {
   String _deviceInfo = ''; // 나중에 네이티브 정보가 들어올 변수
   static const platform = const MethodChannel('com.flutter.dev/info');
+  static const platform3 = const MethodChannel('com.flutter.dev/dialog');
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +58,17 @@ class _NativeApp extends State<NativeApp> {
       ),
       body: Container(
         child: Center(
-          child: Text(
-            _deviceInfo,
-            style: TextStyle(fontSize: 30),
-          ),
+          child: Column(
+            children: [
+              Text(
+              _deviceInfo,
+              style: TextStyle(fontSize: 30),
+              ),
+              TextButton(onPressed: () {
+                _showDialog();
+              }, child: Text('네이티브 창 열기'))
+            ],
+          )
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -85,4 +94,13 @@ class _NativeApp extends State<NativeApp> {
       _deviceInfo = batteryLevel;
     });
   }
+
+  Future<void> _showDialog() async {
+    try {
+      await platform3.invokeMethod('showDialog');
+    } on PlatformException catch (e) {}
+  }
+
+
+
 }
